@@ -42,16 +42,13 @@ def create_survey(survey_url,new_file, survey_name, dzc_file, user, csv_file, vi
         'referer': referer
     }
 
-#    print("upload_data ---------------")
-#    print(upload_data)
-#    print("headers ---------------")
-#    print(headers)
-#    print("upload_url "+ upload_url)
-#    print("csv ---------------")
-#    print(csv)
-
-    
-    
+    print("upload_data ---------------")
+    print(upload_data)
+    print("headers ---------------")
+    print(headers)
+    print("upload_url "+ upload_url)
+    print("csv ---------------")
+    print(csv)
     
     r = requests.post(upload_url, files=csv, data=upload_data, headers=headers)
 
