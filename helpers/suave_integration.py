@@ -22,7 +22,7 @@ def create_survey(survey_url,new_file, survey_name, dzc_file, user, csv_file, vi
 
 # read the current survey file, if this is suave2
 # example: http://suave2.sdsc.edu/getSurveyDzc?user=zaslavsk&file=Alianza_2_5_21
-    if urlparse(survey_url).netloc == 'suave2.sdsc.edu':
+    if True: #urlparse(survey_url).netloc == 'suave2.sdsc.edu':
         if (iflocal == "Load survey file from SuAVE"):
             urlold = urlparse(survey_url).scheme+"://"+ urlparse(survey_url).netloc+'/getSurveyDzc?user='+user+'&file='+csv_file[len(user)+1:-4]
             import json
