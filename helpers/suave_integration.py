@@ -18,7 +18,6 @@ def create_survey(survey_url,new_file, survey_name, dzc_file, user, csv_file, vi
         'name': survey_name,
         'dzc': dzc_file,
         'user':user,
-        'hi_there': 'Hi There!',
     }
 
 # read the current survey file, if this is suave2
