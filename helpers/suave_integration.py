@@ -38,7 +38,7 @@ def create_survey(survey_url,new_file, survey_name, dzc_file, user, csv_file, vi
             upload_data.update({'view' : 'grid'} )
 
     headers = {
-        'User-Agent': 'suave user agent bork bork bork',
+        'User-Agent': 'suave user agent',
         'referer': referer
     }
 
