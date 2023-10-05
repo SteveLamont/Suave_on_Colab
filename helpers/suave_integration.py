@@ -3,11 +3,22 @@ import re
 from urllib.parse import urlparse
 from IPython.display import Markdown, display
 import ipywidgets as widgets
+import zipfile
+import io
 
 def printmd(string):
+
     display(Markdown(string))
 
-def create_survey(survey_url,new_file, survey_name, dzc_file, user, csv_file, view, views, iflocal="Load survey file from SuAVE"):
+def create_survey( survey_url,
+                   new_file,
+                   survey_name,
+                   dzc_file,
+                   user,
+                   csv_file,
+                   view,
+                   views,
+                   iflocal = "Load survey file from SuAVE" ):
 
     referer = survey_url.split("/main")[0] +"/"
     upload_url = referer + "uploadCSV"
@@ -17,7 +28,7 @@ def create_survey(survey_url,new_file, survey_name, dzc_file, user, csv_file, vi
     upload_data = {
         'name': survey_name,
         'dzc': dzc_file,
-        'user':user,
+        'user': user,
     }
 
 # read the current survey file, if this is suave2
@@ -42,15 +53,46 @@ def create_survey(survey_url,new_file, survey_name, dzc_file, user, csv_file, vi
         'referer': referer
     }
 
-    print("upload_data ---------------")
-    print(upload_data)
-    print("headers ---------------")
-    print(headers)
-    print("upload_url "+ upload_url)
-    print("csv ---------------")
-    print(csv)
-    
-    r = requests.post(upload_url, files=csv, data=upload_data, headers=headers)
+    r = requests.post( referer + "getSurveyInfoByDzc",
+                       data = {
+                           "user": user,
+                           "dzc": dzc_file,
+                       },
+                       headers = headers )
+
+    has_netvis = False
+    for j in r.json():
+
+        if "netvis" in j.keys() and \
+           j["netvis"]["type"] == "file":
+
+            nv_url = j["netvis"]["url"]
+            nv_r = requests.get( nv_url ), headers = headers )
+
+            if nv_r.status_code == 200:
+
+                netvis = nv_r.json()
+                has_netvis = True
+                break
+
+    if has_netvis:
+
+        zip_data = io.BytesIO()
+
+        with zipfile.ZipFile( zip_data,
+                              mode='w',
+                              compression = zipfile.ZIP_DEFLATED ) as zf:
+
+            zf.writestr( "new.csv", csv["file"].read().encode( 'utf-8' ) )
+            zf.writestr( "new.json", json.dumps( netvis ) )
+
+        zip_data.seek( 0, io.SEEK_SET )
+        csv = { "corpus_db_zip": zip_data }
+        
+    r = requests.post( upload_url,
+                       files = csv,
+                       data = upload_data,
+                       headers = headers )
 
     if r.status_code == 200:
         printmd("<b><span style='color:red; font-size: 200%;'>New survey created successfully</span></b>")
