@@ -6,8 +6,6 @@ import ipywidgets as widgets
 import zipfile
 import io
 
-print( "Hi there!" )
-
 def printmd(string):
 
     display(Markdown(string))
@@ -65,17 +63,20 @@ def create_survey( survey_url,
     has_netvis = False
     for j in r.json():
 
-        if "netvis" in j.keys() and \
-           j["netvis"]["type"] == "file":
+        if "netvis" in j.keys():
 
-            nv_url = j["netvis"]["url"]
-            nv_r = requests.get( nv_url, headers = headers )
+            for nv in j["netvis"]:
 
-            if nv_r.status_code == 200:
+                if nv["type"] == "file":
 
-                netvis = nv_r.json()
-                has_netvis = True
-                break
+                    nv_url = nv["url"]
+                    nv_r = requests.get( nv_url, headers = headers )
+                    
+                    if nv_r.status_code == 200:
+                        
+                        netvis = nv_r.json()
+                        has_netvis = True
+                        break
 
     if has_netvis:
 
@@ -85,7 +86,7 @@ def create_survey( survey_url,
                               mode='w',
                               compression = zipfile.ZIP_DEFLATED ) as zf:
 
-            zf.writestr( "new.csv", csv["file"].read().encode( 'utf-8' ) )
+            zf.writestr( "new.csv", csv["file"].read() )
             zf.writestr( "new.json", json.dumps( netvis ) )
 
         zip_data.seek( 0, io.SEEK_SET )
@@ -97,6 +98,7 @@ def create_survey( survey_url,
                        headers = headers )
 
     if r.status_code == 200:
+
         printmd("<b><span style='color:red; font-size: 200%;'>New survey created successfully</span></b>")
         regex = re.compile('[^0-9a-zA-Z_]')
         s_url = survey_name
@@ -106,13 +108,14 @@ def create_survey( survey_url,
             url = new_survey_url_base + user + "_" + s_url + ".csv" + "&view=" + view
         else:
             url = new_survey_url_base + user + "_" + s_url + ".csv" + "&views=" + views + "&view=" + view
-        print(url)
+
         printmd("<b><span style='color:red; font-size: 200%;'>Click the URL to open the new survey</span></b>")
     else:
         printmd("<b><span style='color:red; font-size: 200%;'>Error creating new survey.</span><span style='color:red; font-size: 120%;'> Check if a survey with this name already exists. Make sure you are logged into your SuAVE account.</span></b>")
         printmd("<b><span style='color:red'>Reason: </span></b>"+ str(r.status_code) + " " + r.reason)
         
 def save_csv_file(df, absolutePath, csv_file):
+
     # new filename
     new_file = absolutePath + csv_file[:-4]+'_v1.csv'
     printmd("<b><span style='color:red'>A new temporary file will be created at: </span></b>")
