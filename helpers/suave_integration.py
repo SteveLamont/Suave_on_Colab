@@ -6,6 +6,8 @@ import ipywidgets as widgets
 import zipfile
 import io
 
+print( "Hi there!" )
+
 def printmd(string):
 
     display(Markdown(string))
