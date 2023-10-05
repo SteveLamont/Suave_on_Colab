@@ -69,7 +69,7 @@ def create_survey( survey_url,
            j["netvis"]["type"] == "file":
 
             nv_url = j["netvis"]["url"]
-            nv_r = requests.get( nv_url ), headers = headers )
+            nv_r = requests.get( nv_url, headers = headers )
 
             if nv_r.status_code == 200:
 
