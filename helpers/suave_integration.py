@@ -63,6 +63,9 @@ def create_survey( survey_url,
     has_netvis = False
     for j in r.json():
 
+        if has_netvis:
+
+            break
         if "netvis" in j.keys():
 
             for nv in j["netvis"]:
