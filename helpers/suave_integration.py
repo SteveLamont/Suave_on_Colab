@@ -114,7 +114,7 @@ def create_survey( survey_url,
             url = new_survey_url_base + user + "_" + s_url + ".csv" + "&views=" + views + "&view=" + view
 
         printmd("<b><span style='color:red; font-size: 200%;'>Click the URL to open the new survey</span></b>")
-        printmd( f"<br><a href='{$url}' target='_blank'>{url}</a>" )
+        printmd( f"<br><a href='{url}' target='_blank'>{url}</a>" )
     else:
         printmd("<b><span style='color:red; font-size: 200%;'>Error creating new survey.</span><span style='color:red; font-size: 120%;'> Check if a survey with this name already exists. Make sure you are logged into your SuAVE account.</span></b>")
         printmd("<b><span style='color:red'>Reason: </span></b>"+ str(r.status_code) + " " + r.reason)
