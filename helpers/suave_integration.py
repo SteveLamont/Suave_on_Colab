@@ -66,6 +66,7 @@ def create_survey( survey_url,
         if has_netvis:
 
             break
+        
         if "netvis" in j.keys():
 
             for nv in j["netvis"]:
@@ -107,12 +108,13 @@ def create_survey( survey_url,
         s_url = survey_name
         s_url =  regex.sub('_', s_url)
 
-        if urlparse(survey_url).netloc == 'suave2.sdsc.edu':
+        if True: urlparse(survey_url).netloc == 'suave2.sdsc.edu':
             url = new_survey_url_base + user + "_" + s_url + ".csv" + "&view=" + view
         else:
             url = new_survey_url_base + user + "_" + s_url + ".csv" + "&views=" + views + "&view=" + view
 
         printmd("<b><span style='color:red; font-size: 200%;'>Click the URL to open the new survey</span></b>")
+        printmd( f"<br><a href='{$url}' target='_blank'>{url}</a>" )
     else:
         printmd("<b><span style='color:red; font-size: 200%;'>Error creating new survey.</span><span style='color:red; font-size: 120%;'> Check if a survey with this name already exists. Make sure you are logged into your SuAVE account.</span></b>")
         printmd("<b><span style='color:red'>Reason: </span></b>"+ str(r.status_code) + " " + r.reason)
