@@ -108,7 +108,7 @@ def create_survey( survey_url,
         s_url = survey_name
         s_url =  regex.sub('_', s_url)
 
-        if True: urlparse(survey_url).netloc == 'suave2.sdsc.edu':
+        if urlparse(survey_url).netloc == 'suave2.sdsc.edu':
             url = new_survey_url_base + user + "_" + s_url + ".csv" + "&view=" + view
         else:
             url = new_survey_url_base + user + "_" + s_url + ".csv" + "&views=" + views + "&view=" + view
